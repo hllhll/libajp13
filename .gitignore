@@ -1,0 +1,12 @@
+.classpath
+.project
+.settings
+.idea
+.metadata
+*.iml
+*.ipr
+**/*~
+/target/
+/test/
+/build/
+/dist/
