@@ -1,30 +1,28 @@
-======================================
-A client for the Apache JServ Protocol
-======================================
+# AJPClient - AJPv1.3 Java Client Library
+*AJPClient* is a complete implementation of the Apache JServ Protocol version 1.3 (ajp13), based on the [Apache Protocol Reference](https://tomcat.apache.org/connectors-doc/ajp/ajpv13a.html).
 
-I've often wanted a Java client for AJP_, but never found one.  So
-while waiting for a maintenance window to roll around at work, I
-finally wrote one.
+This client library has been developed from Espen Wiborg's [ajp_client](https://github.com/espenhw/ajp-client) original code. Licensed under the Apache License, Version 2.0. 
 
-Yes, I know the code is horrible; yes, I know there is no
-documentation.  Both of those things can be fixed in time.
+### How To Use it
+The following code examples show how to use AJPClient:
 
-====================
- Boring legal stuff
-====================
+```java
+//TODO CPing
+```
 
-Copyright (c) 2010 Espen Wiborg <espenhw@grumblesmurf.org>
+```java
+//TODO SIMPLE EXAMPLE OF ForwardRequest
+```
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
+```java
+//TODO COMPLICATED EXAMPLE OF ForwardRequest
+```
 
-    http://www.apache.org/licenses/LICENSE-2.0
+### Useful links
+* https://tomcat.apache.org/connectors-doc/ajp/ajpv13a.html
+* https://tomcat.apache.org/tomcat-7.0-doc/api/org/apache/coyote/ajp/Constants.html
+* https://github.com/kohsuke/ajp-client
+* http://isu.ifmo.ru/docs/IAS904/web.904/q20202/protocol/AJPv21.html
+* http://en.wikipedia.org/wiki/Apache_JServ_Protocol
+* https://tomcat.apache.org/tomcat-7.0-doc/config/ajp.html
 
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-
-.. _AJP: http://tomcat.apache.org/connectors-doc/ajp/ajpv13a.html
