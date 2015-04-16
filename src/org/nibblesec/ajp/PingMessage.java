@@ -1,5 +1,5 @@
 /*
- * CPongMessage.java
+ * PingMessage.java
  *
  * Copyright (c) 2015 Luca Carettoni
  * Copyright (c) 2010 Espen Wiborg
@@ -11,26 +11,26 @@ package org.nibblesec.ajp;
 import java.io.IOException;
 import java.io.OutputStream;
 
-class CPongMessage
+class PingMessage
         extends AbstractAjpMessage {
 
-    CPongMessage() {
-        super(Constants.PACKET_TYPE_CPONG);
+    PingMessage() {
+        super(Constants.PACKET_TYPE_PING);
+    }
+
+    @Override
+    public void writeTo(OutputStream out) throws IOException {
+        throw new UnsupportedOperationException("Not supported for a Ping packet");
     }
     
     @Override
-    public void writeTo(OutputStream out) throws IOException {
-        throw new UnsupportedOperationException("Not supported for a CPong packet."); 
-    }
-
-    @Override
     public String getName() {
-        return "CPong";
+        return "Ping";
     }
 
     @Override
     public String getDescription() {
-        return "The reply to a CPing request";
+        return "The web server asks the container to take control (secure login phase)";
     }
-    
+
 }

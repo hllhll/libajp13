@@ -18,6 +18,7 @@ class EndResponseMessage
     final boolean reuse;
 
     EndResponseMessage(boolean reuse) {
+        super(Constants.PACKET_TYPE_END_RESPONSE);
         this.reuse = reuse;
     }
 
@@ -40,8 +41,4 @@ class EndResponseMessage
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
-    public int getSize() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 }

@@ -19,7 +19,14 @@ final class AjpReader {
 
     static public AjpMessage parseMessage(byte[] reply) throws IOException {
         //AB + size (2 bytes) + [type]
-        int type = reply[4];
+        InputStream in = new ByteArrayInputStream(reply);
+        consume('A', in);
+        consume('B', in);
+        int length = readInt(in);
+        if (length <= 0) return null; //empty AjpMessage
+        int type = in.read();
+        byte[] bytes = new byte[length - 1];
+        fullyRead(bytes, in);
 
         switch (type) {
             //From WebServer to Containers
@@ -54,7 +61,7 @@ final class AjpReader {
         return makeInt(buf[0], buf[1]);
     }
 
-    static int makeInt(int b1, int b2) {
+    private static int makeInt(int b1, int b2) {
         return b1 << 8 | (b2 & 0xff);
     }
 
@@ -63,7 +70,16 @@ final class AjpReader {
         return readString(len, in);
     }
 
-    static String readString(int len, InputStream in) throws IOException {
+    private static String readString(int len, InputStream in) throws IOException {
+        return new String(readBytes(len, in), "UTF-8");
+    }
+
+    static byte[] readBytes(InputStream in) throws IOException {
+        int len = readInt(in);
+        return readBytes(len, in);
+    }
+
+    private static byte[] readBytes(int len, InputStream in) throws IOException {
         if (len < 1) {
             return null;
         }
@@ -71,7 +87,7 @@ final class AjpReader {
         fullyRead(buf, in);
         // Skip the terminating \0
         in.read();
-        return new String(buf, "UTF-8");
+        return buf;
     }
 
     static void fullyRead(byte[] buffer, InputStream in) throws IOException {
@@ -99,5 +115,17 @@ final class AjpReader {
         if (readByte != expected) {
             System.out.println("[KO] AjpReader Unexpected Byte: " + readByte);
         }
+    }
+
+    static String getHex(byte[] raw) {
+        final String HEXES = "0123456789ABCDEF";
+        if (raw == null) {
+            return null;
+        }
+        final StringBuilder hex = new StringBuilder(2 * raw.length);
+        for (final byte b : raw) {
+            hex.append(HEXES.charAt((b & 0xF0) >> 4)).append(HEXES.charAt((b & 0x0F)));
+        }
+        return hex.toString();
     }
 }

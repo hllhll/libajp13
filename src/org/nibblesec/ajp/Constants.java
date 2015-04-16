@@ -13,6 +13,7 @@ import java.util.Map;
 
 final class Constants {
 
+    static final int PACKET_TYPE_DATA = 0; //body data packets don't have a msg type
     static final int PACKET_TYPE_FORWARD_REQUEST = 2;
     static final int PACKET_TYPE_SEND_BODY_CHUNK = 3;
     static final int PACKET_TYPE_SEND_HEADERS = 4;

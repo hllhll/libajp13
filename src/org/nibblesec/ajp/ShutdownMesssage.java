@@ -8,11 +8,19 @@
  */
 package org.nibblesec.ajp;
 
+import java.io.IOException;
+import java.io.OutputStream;
+
 class ShutdownMessage
         extends AbstractAjpMessage 
 {
     ShutdownMessage() {
         super(Constants.PACKET_TYPE_SHUTDOWN);
+    }
+    
+    @Override
+    public void writeTo(OutputStream out) throws IOException {
+        throw new UnsupportedOperationException("Not supported for a Shutdown packet.");
     }
 
     @Override
@@ -26,4 +34,5 @@ class ShutdownMessage
                 + "will only actually do the Shutdown if the request comes from the "
                 + "same machine on which it's hosted";
     }
+
 }

@@ -28,7 +28,7 @@ public class AjpClientExamples {
 
     AjpClientExamples() {
         this.ip = "127.0.0.1";
-        this.port = 8009;
+        this.port = 8019;
     }
 
     AjpClientExamples(String ip, int port) {
@@ -53,22 +53,32 @@ public class AjpClientExamples {
 
         // Test Case 1 - CPing/CPong
         msg = new CPingMessage();
-        replyByte = myClient.send(msg.getBytes());
-        reply = AjpReader.parseMessage(replyByte);
-        if (reply instanceof CPongMessage) {
-            System.out.println("[OK] Valid " + ((CPongMessage) reply).getName());
-        }
+//        replyByte = myClient.send(msg.getBytes());
+//        reply = AjpReader.parseMessage(replyByte);
+//        if (reply instanceof CPongMessage) {
+//            System.out.println("[OK] Valid " + ((CPongMessage) reply).getName());
+//        }
 
         // Test Case 2 - Shutdown
-        msg = new ShutdownMessage();
+//        msg = new ShutdownMessage();
+//        replyByte = myClient.send(msg.getBytes());
+//        reply = AjpReader.parseMessage(replyByte);
+        
+        // Test Case 3 - Ping
+//        msg = new PingMessage();
+//        replyByte = myClient.send(msg.getBytes());
+//        reply = AjpReader.parseMessage(replyByte);
+        
+        // Test Case 4 - Data packet (with no previous ForwardRequest)
+        msg = new DataMessage("BODYCONTENT".getBytes());
         replyByte = myClient.send(msg.getBytes());
-        //reply = AjpReader.parseMessage(replyByte);
+        reply = AjpReader.parseMessage(replyByte);
     }
 
     private byte[] send(byte[] data) throws UnsupportedEncodingException {
         System.out.println("\n[*]--------------------------------------------");
         System.out.println("--> SENDING");
-        System.out.println("---> Hex: 0x" + getHex(data));
+        System.out.println("---> Hex: 0x" + AjpReader.getHex(data));
         System.out.println("---> Ascii: " + new String(data, "UTF-8"));
 
         //The max packet size is 8 * 1024 getBytes (8K)
@@ -91,23 +101,11 @@ public class AjpClientExamples {
 
         if (size > 0) {
             System.out.println("--> RECEIVING");
-            System.out.println("---> Hex: 0x" + getHex(Arrays.copyOfRange(reply, 0, size)));
+            System.out.println("---> Hex: 0x" + AjpReader.getHex(Arrays.copyOfRange(reply, 0, size)));
             System.out.println("---> Ascii: " + new String(reply, "UTF-8"));
         }
         System.out.println("[*]--------------------------------------------");
         
         return reply;
-    }
-
-    private static String getHex(byte[] raw) {
-        final String HEXES = "0123456789ABCDEF";
-        if (raw == null) {
-            return null;
-        }
-        final StringBuilder hex = new StringBuilder(2 * raw.length);
-        for (final byte b : raw) {
-            hex.append(HEXES.charAt((b & 0xF0) >> 4)).append(HEXES.charAt((b & 0x0F)));
-        }
-        return hex.toString();
     }
 }

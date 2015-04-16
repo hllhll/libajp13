@@ -9,6 +9,8 @@
 package org.nibblesec.ajp;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 
 abstract class AbstractAjpMessage
@@ -23,7 +25,14 @@ abstract class AbstractAjpMessage
         // Write two placeholder getBytes for the length
         bos.write(0);
         bos.write(0);
-        bos.write(packetType);
+        if (packetType != Constants.PACKET_TYPE_DATA) {
+            bos.write(packetType);
+        }
+    }
+
+    public void writeTo(OutputStream out) throws IOException {
+        out.write(getBytes());
+        out.flush();
     }
 
     @Override
@@ -42,6 +51,10 @@ abstract class AbstractAjpMessage
 
     protected void writeByte(int b) {
         bos.write(b);
+    }
+
+    protected void writeBytes(byte[] ba) throws IOException {
+        bos.write(ba);
     }
 
     protected void writeInt(int i) {
