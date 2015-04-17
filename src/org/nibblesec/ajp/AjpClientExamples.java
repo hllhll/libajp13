@@ -15,6 +15,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 /*
  * Send and Retrieve AJP packets - Test Cases
@@ -28,7 +30,7 @@ public class AjpClientExamples {
 
     AjpClientExamples() {
         this.ip = "127.0.0.1";
-        this.port = 8019;
+        this.port = 8009;
     }
 
     AjpClientExamples(String ip, int port) {
@@ -70,7 +72,14 @@ public class AjpClientExamples {
 //        reply = AjpReader.parseMessage(replyByte);
         
         // Test Case 4 - Data packet (with no previous ForwardRequest)
-        msg = new DataMessage("BODYCONTENT".getBytes());
+//        msg = new DataMessage("BODYCONTENT".getBytes());
+//        replyByte = myClient.send(msg.getBytes());
+//        reply = AjpReader.parseMessage(replyByte);
+        
+        // Test Case 5 -SendHeadersMessage
+        List<Pair<String, String>> headers = new LinkedList<>();
+        headers.add(Pair.make("StatusAAA","HeaderValue"));
+        msg = new SendHeadersMessage(200,"OK",headers);
         replyByte = myClient.send(msg.getBytes());
         reply = AjpReader.parseMessage(replyByte);
     }

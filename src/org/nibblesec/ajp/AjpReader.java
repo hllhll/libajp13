@@ -61,7 +61,7 @@ final class AjpReader {
         return makeInt(buf[0], buf[1]);
     }
 
-    private static int makeInt(int b1, int b2) {
+    static int makeInt(int b1, int b2) {
         return b1 << 8 | (b2 & 0xff);
     }
 
@@ -70,7 +70,7 @@ final class AjpReader {
         return readString(len, in);
     }
 
-    private static String readString(int len, InputStream in) throws IOException {
+    static String readString(int len, InputStream in) throws IOException {
         return new String(readBytes(len, in), "UTF-8");
     }
 

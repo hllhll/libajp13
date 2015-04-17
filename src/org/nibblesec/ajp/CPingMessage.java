@@ -8,19 +8,11 @@
  */
 package org.nibblesec.ajp;
 
-import java.io.IOException;
-import java.io.OutputStream;
-
 class CPingMessage
     extends AbstractAjpMessage
 {
     CPingMessage() {
         super(Constants.PACKET_TYPE_CPING); 
-    }
-    
-    @Override
-    public void writeTo(OutputStream out) throws IOException {
-        throw new UnsupportedOperationException("Not necessary for a CPing packet.");
     }
 
     @Override

@@ -10,7 +10,6 @@ package org.nibblesec.ajp;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 
 class DataMessage
         extends AbstractAjpMessage {
@@ -28,13 +27,6 @@ class DataMessage
         return new DataMessage(bodyData);
     }
     
-    @Override
-    public final void writeTo(OutputStream out) throws IOException {
-        writeBytes(bodyData);
-        super.writeTo(out);
-    }
-    
-
     @Override
     public String getName() {
         return "Data";

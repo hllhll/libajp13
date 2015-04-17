@@ -8,21 +8,14 @@
  */
 package org.nibblesec.ajp;
 
-import java.io.IOException;
-import java.io.OutputStream;
-
 class PingMessage
         extends AbstractAjpMessage {
 
+    //@TODO Reverse any implementation with the Ping (not CPing) type 
     PingMessage() {
         super(Constants.PACKET_TYPE_PING);
     }
 
-    @Override
-    public void writeTo(OutputStream out) throws IOException {
-        throw new UnsupportedOperationException("Not supported for a Ping packet");
-    }
-    
     @Override
     public String getName() {
         return "Ping";
@@ -32,5 +25,4 @@ class PingMessage
     public String getDescription() {
         return "The web server asks the container to take control (secure login phase)";
     }
-
 }

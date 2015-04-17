@@ -17,7 +17,9 @@ class GetBodyChunkMessage
     final int length;
 
     GetBodyChunkMessage(int length) {
+        super(Constants.PACKET_TYPE_GET_BODY_CHUNK);
         this.length = length;
+        writeInt(length);
     }
 
     static GetBodyChunkMessage readFrom(InputStream in) throws IOException {
@@ -27,16 +29,11 @@ class GetBodyChunkMessage
 
     @Override
     public String getName() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return "Get Body Chunk";
     }
 
     @Override
     public String getDescription() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public int getSize() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return "Get further data from the request if it hasn't all been transferred yet";
     }
 }

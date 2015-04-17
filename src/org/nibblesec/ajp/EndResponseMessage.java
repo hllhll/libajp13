@@ -10,7 +10,6 @@ package org.nibblesec.ajp;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 
 class EndResponseMessage
     extends AbstractAjpMessage
@@ -20,11 +19,12 @@ class EndResponseMessage
     EndResponseMessage(boolean reuse) {
         super(Constants.PACKET_TYPE_END_RESPONSE);
         this.reuse = reuse;
+        writeBoolean(reuse);
     }
 
     @Override
     public String toString() {
-        return String.format("END (%sreuse)", reuse ? "" : "don't ");
+        return String.format("END (%sreuse)", reuse ? "Yes" : "No");
     }
 
     static EndResponseMessage readFrom(InputStream in) throws IOException {
@@ -33,12 +33,12 @@ class EndResponseMessage
 
     @Override
     public String getName() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return "End Response";
     }
 
     @Override
     public String getDescription() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return "Marks the end of the response (and thus the request-handling cycle). Reuse? "+ this.toString();
     }
 
 }

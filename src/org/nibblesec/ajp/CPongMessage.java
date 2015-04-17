@@ -8,19 +8,11 @@
  */
 package org.nibblesec.ajp;
 
-import java.io.IOException;
-import java.io.OutputStream;
-
 class CPongMessage
         extends AbstractAjpMessage {
 
     CPongMessage() {
         super(Constants.PACKET_TYPE_CPONG);
-    }
-    
-    @Override
-    public void writeTo(OutputStream out) throws IOException {
-        throw new UnsupportedOperationException("Not supported for a CPong packet."); 
     }
 
     @Override
@@ -32,5 +24,4 @@ class CPongMessage
     public String getDescription() {
         return "The reply to a CPing request";
     }
-    
 }

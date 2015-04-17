@@ -18,17 +18,22 @@ class SendBodyChunkMessage
     final int length;
     final byte[] bytes;
 
-    SendBodyChunkMessage(int length, byte[] bytes) {
+    SendBodyChunkMessage(int length, byte[] bytes) throws IOException {
+        super(Constants.PACKET_TYPE_SEND_BODY_CHUNK);
         this.length = length;
+        writeInt(length);
         this.bytes = bytes;
+        writeBytes(bytes);
+        
     }
 
     @Override
     public String toString() {
         try {
-            return new String(bytes, "ISO-8859-1");
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException("Your JVM is broken", e);
+            return new String(bytes, "UTF-8");
+        } catch (UnsupportedEncodingException ex) {
+            System.out.println("[KO] SendBodyChunkMessage UnsupportedEncodingException: " + ex.getLocalizedMessage());
+            return "InvalidEncoding";
         }
     }
 
@@ -41,16 +46,11 @@ class SendBodyChunkMessage
 
     @Override
     public String getName() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return "Send Body Chunk";
     }
 
     @Override
     public String getDescription() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public int getSize() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return "Send a chunk of the body from the servlet container to the web server";
     }
 }

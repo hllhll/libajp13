@@ -16,12 +16,17 @@ import java.io.UnsupportedEncodingException;
 abstract class AbstractAjpMessage
         implements AjpMessage {
 
-    static final byte[] AJP_TAG = {0x12, 0x34};
+    static final byte[] AJP_TAG_REQ = {0x12, 0x34};
+    static final byte[] AJP_TAG_RESP = {0x41, 0x42};
     private final ByteArrayOutputStream bos;
 
     AbstractAjpMessage(int packetType) {
         bos = new ByteArrayOutputStream();
-        bos.write(AJP_TAG, 0, AJP_TAG.length);
+        if (packetType == Constants.PACKET_TYPE_DATA || packetType == Constants.PACKET_TYPE_FORWARD_REQUEST || packetType == Constants.PACKET_TYPE_SHUTDOWN || packetType == Constants.PACKET_TYPE_PING || packetType == Constants.PACKET_TYPE_CPING) {
+            bos.write(AJP_TAG_REQ, 0, AJP_TAG_REQ.length);
+        }else{
+            bos.write(AJP_TAG_RESP, 0, AJP_TAG_RESP.length);
+        }
         // Write two placeholder getBytes for the length
         bos.write(0);
         bos.write(0);
@@ -30,6 +35,7 @@ abstract class AbstractAjpMessage
         }
     }
 
+    @Override
     public void writeTo(OutputStream out) throws IOException {
         out.write(getBytes());
         out.flush();
@@ -80,5 +86,20 @@ abstract class AbstractAjpMessage
                 System.out.println("[KO] AbstractAjpMessage UnsupportedEncodingException: " + ex.getLocalizedMessage());
             }
         }
+    }
+}
+
+class Pair<T, U> {
+
+    final T a;
+    final U b;
+
+    Pair(T a, U b) {
+        this.a = a;
+        this.b = b;
+    }
+
+    static <K, V> Pair<K, V> make(K k, V v) {
+        return new Pair<K, V>(k, v);
     }
 }

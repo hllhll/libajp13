@@ -10,23 +10,52 @@ package org.nibblesec.ajp;
 
 import java.io.IOException;
 import java.io.InputStream;
-
+import java.math.BigInteger;
 import java.util.LinkedList;
 import java.util.List;
 
 class SendHeadersMessage
-    extends AbstractAjpMessage
-{
+        extends AbstractAjpMessage {
+
     final int statusCode;
     final String statusMessage;
     final List<Pair<String, String>> headers;
 
-    SendHeadersMessage(int statusCode, String statusMessage, List<Pair<String, String>> headers) {
+    SendHeadersMessage(int statusCode, String statusMessage, List<Pair<String, String>> headers) throws IOException {
+        super(Constants.PACKET_TYPE_SEND_HEADERS);
         this.statusCode = statusCode;
+        writeInt(statusCode);
         this.statusMessage = statusMessage;
+        writeString(statusMessage);
         this.headers = headers;
+        int numHeaders = headers.size();
+        writeInt(numHeaders);
+        for (Pair<String, String> header : headers) {
+            String eHeader = encodeHeaders(header.a); 
+            if(eHeader.contains("A0")){
+              //Send HeaderName as Byte
+              byte[] headerBytes = new BigInteger(eHeader,16).toByteArray();
+              writeBytes(headerBytes);
+            }else{
+              //Send HeaderName as String
+              writeString(eHeader);  
+            }
+            //Send HeaderValue
+            writeString(header.b);  
+        }
     }
 
+    private String encodeHeaders(String name){
+        for(int i=0; i<Constants.RESPONSE_HEADERS.length; i++){
+            if(Constants.RESPONSE_HEADERS[i].equalsIgnoreCase(name)){
+                //return encoding code
+                return "A00"+Integer.toHexString(i+1);
+            }
+        }
+        //no match, return the original string
+        return name;
+    }
+    
     @Override
     public String toString() {
         StringBuilder ret = new StringBuilder();
@@ -37,7 +66,7 @@ class SendHeadersMessage
         ret.append("\n");
         return ret.toString();
     }
-    
+
     static SendHeadersMessage readFrom(InputStream in) throws IOException {
         List<Pair<String, String>> headers = new LinkedList<Pair<String, String>>();
         int statusCode = AjpReader.readInt(in);
@@ -60,16 +89,11 @@ class SendHeadersMessage
 
     @Override
     public String getName() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return "Send Headers";
     }
 
     @Override
     public String getDescription() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public int getSize() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return "Send the response headers from the servlet container to the web server";
     }
 }

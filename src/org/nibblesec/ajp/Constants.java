@@ -13,16 +13,19 @@ import java.util.Map;
 
 final class Constants {
 
+    //Request
     static final int PACKET_TYPE_DATA = 0; //body data packets don't have a msg type
     static final int PACKET_TYPE_FORWARD_REQUEST = 2;
+    static final int PACKET_TYPE_SHUTDOWN = 7;
+    static final int PACKET_TYPE_PING = 8;
+    static final int PACKET_TYPE_CPING = 10;
+    //Responses
     static final int PACKET_TYPE_SEND_BODY_CHUNK = 3;
     static final int PACKET_TYPE_SEND_HEADERS = 4;
     static final int PACKET_TYPE_END_RESPONSE = 5;
     static final int PACKET_TYPE_GET_BODY_CHUNK = 6;
-    static final int PACKET_TYPE_SHUTDOWN = 7;
-    static final int PACKET_TYPE_PING = 8;
     static final int PACKET_TYPE_CPONG = 9;
-    static final int PACKET_TYPE_CPING = 10;
+    
     static final int REQUEST_TERMINATOR = 0xff;
     static final Map<String, Integer> COMMON_HEADERS = new HashMap<>();
 
@@ -62,15 +65,15 @@ final class Constants {
     }
     static final int ATTRIBUTE_GENERIC = 0x0A;
     static final String[] RESPONSE_HEADERS = {
-        "Content-Type",
-        "Content-Language",
-        "Content-Length",
-        "Date",
-        "Last-Modified",
-        "Location",
-        "Set-Cookie",
-        "Set-Cookie2",
-        "Servlet-Engine",
-        "Status",
-        "WWW-Authenticate",};
+        "Content-Type", //0xA001
+        "Content-Language", //0xA002
+        "Content-Length", //0xA003
+        "Date", //0xA004
+        "Last-Modified", //0xA005
+        "Location", //0xA006
+        "Set-Cookie", //0xA007
+        "Set-Cookie2", //0xA008
+        "Servlet-Engine", //0xA009
+        "Status", //0xA00A
+        "WWW-Authenticate",}; //0xA00B
 }
