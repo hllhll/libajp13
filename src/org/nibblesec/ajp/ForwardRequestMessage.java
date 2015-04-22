@@ -9,7 +9,9 @@
 package org.nibblesec.ajp;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 
 import java.net.URL;
 
@@ -86,23 +88,6 @@ class ForwardRequestMessage
         attributes.add(Pair.make(name, value));
     }
 
-    @Override
-    public final void writeTo(OutputStream out) throws IOException {
-        writeByte(method.code);
-        writeString(protocol);
-        writeString(requestUri);
-        writeString(remoteAddress);
-        writeString(remoteHost);
-        writeString(serverName);
-        writeInt(serverPort);
-        writeBoolean(isSsl);
-        writeInt(headers.size());
-        writeHeaders(headers);
-        writeAttributes(attributes);
-        writeByte(Constants.REQUEST_TERMINATOR);
-        super.writeTo(out);
-    }
-
     private void writeHeaders(List<Pair<String, String>> headers) {
         for (Pair<String, String> header : headers) {
             String name = header.a;
@@ -132,6 +117,23 @@ class ForwardRequestMessage
             }
         }
     }
+    
+        static ForwardRequestMessage readFrom(InputStream in) throws IOException {
+        int length = AjpReader.readInt(in);
+        byte[] bytes = new byte[length];
+        AjpReader.fullyRead(bytes, in);
+        return new ForwardRequestMessage(length, bytes);
+    }
+    
+    @Override
+    public String toString() {
+        try {
+            return new String(bytes, "UTF-8");
+        } catch (UnsupportedEncodingException ex) {
+            System.out.println("[KO] SendBodyChunkMessage UnsupportedEncodingException: " + ex.getLocalizedMessage());
+            return "InvalidEncoding";
+        }
+    }
 
     @Override
     public String getName() {
@@ -140,7 +142,7 @@ class ForwardRequestMessage
 
     @Override
     public String getDescription() {
-        return "Begin the request-processing cycle with the following data";
+        return "Begin the request-processing cycle with the following data. Request: " + this.toString();
     }
 
 }

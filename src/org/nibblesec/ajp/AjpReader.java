@@ -51,7 +51,7 @@ final class AjpReader {
                 return EndResponseMessage.readFrom(new ByteArrayInputStream(reply));
             default:
                 //Probably a Data packet (none code)
-                return DataMessage.readFrom(new ByteArrayInputStream(reply));
+                return BodyMessage.readFrom(new ByteArrayInputStream(reply));
         }
     }
 
@@ -116,7 +116,8 @@ final class AjpReader {
             System.out.println("[KO] AjpReader Unexpected Byte: " + readByte);
         }
     }
-
+    
+    //Convert a byte array to a string representation of hex values
     static String getHex(byte[] raw) {
         final String HEXES = "0123456789ABCDEF";
         if (raw == null) {
@@ -128,4 +129,15 @@ final class AjpReader {
         }
         return hex.toString();
     }
+    
+    //Convert a string representation of hex values to byte array
+    static byte[] toHex(String s) {
+    int len = s.length();
+    byte[] data = new byte[len / 2];
+    for (int i = 0; i < len; i += 2) {
+        data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
+                             + Character.digit(s.charAt(i+1), 16));
+    }
+    return data;
+}
 }

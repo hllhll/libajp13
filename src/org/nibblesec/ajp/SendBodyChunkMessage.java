@@ -13,8 +13,8 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 
 class SendBodyChunkMessage
-    extends AbstractAjpMessage
-{
+        extends AbstractAjpMessage {
+
     final int length;
     final byte[] bytes;
 
@@ -24,7 +24,6 @@ class SendBodyChunkMessage
         writeInt(length);
         this.bytes = bytes;
         writeBytes(bytes);
-        
     }
 
     @Override

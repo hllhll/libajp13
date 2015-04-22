@@ -24,7 +24,7 @@ abstract class AbstractAjpMessage
         bos = new ByteArrayOutputStream();
         if (packetType == Constants.PACKET_TYPE_DATA || packetType == Constants.PACKET_TYPE_FORWARD_REQUEST || packetType == Constants.PACKET_TYPE_SHUTDOWN || packetType == Constants.PACKET_TYPE_PING || packetType == Constants.PACKET_TYPE_CPING) {
             bos.write(AJP_TAG_REQ, 0, AJP_TAG_REQ.length);
-        }else{
+        } else {
             bos.write(AJP_TAG_RESP, 0, AJP_TAG_RESP.length);
         }
         // Write two placeholder getBytes for the length
@@ -72,16 +72,17 @@ abstract class AbstractAjpMessage
         bos.write(b ? 1 : 0);
     }
 
-    protected void writeString(String s) {
+    protected void writeString(String s, boolean term) {
         if (s == null) {
-            bos.write(-1);
+            bos.write(0);
         } else {
             // size (2 bytes) + string + \0
             writeInt(s.length());
             try {
                 byte[] buf = s.getBytes("UTF-8");
                 bos.write(buf, 0, buf.length);
-                bos.write('\0');
+                //From my experiments, the bodyMessage packet doesn't contain the string terminator (bad implementation?)
+                if(term) bos.write('\0');
             } catch (UnsupportedEncodingException ex) {
                 System.out.println("[KO] AbstractAjpMessage UnsupportedEncodingException: " + ex.getLocalizedMessage());
             }

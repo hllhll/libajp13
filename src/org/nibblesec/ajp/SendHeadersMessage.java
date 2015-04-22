@@ -10,7 +10,6 @@ package org.nibblesec.ajp;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.math.BigInteger;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -26,7 +25,7 @@ class SendHeadersMessage
         this.statusCode = statusCode;
         writeInt(statusCode);
         this.statusMessage = statusMessage;
-        writeString(statusMessage);
+        writeString(statusMessage, true);
         this.headers = headers;
         int numHeaders = headers.size();
         writeInt(numHeaders);
@@ -34,14 +33,13 @@ class SendHeadersMessage
             String eHeader = encodeHeaders(header.a); 
             if(eHeader.contains("A0")){
               //Send HeaderName as Byte
-              byte[] headerBytes = new BigInteger(eHeader,16).toByteArray();
-              writeBytes(headerBytes);
+              writeBytes(AjpReader.toHex(eHeader));
             }else{
               //Send HeaderName as String
-              writeString(eHeader);  
+              writeString(eHeader, true);  
             }
             //Send HeaderValue
-            writeString(header.b);  
+            writeString(header.b, true);  
         }
     }
 
@@ -49,7 +47,7 @@ class SendHeadersMessage
         for(int i=0; i<Constants.RESPONSE_HEADERS.length; i++){
             if(Constants.RESPONSE_HEADERS[i].equalsIgnoreCase(name)){
                 //return encoding code
-                return "A00"+Integer.toHexString(i+1);
+                return "A00"+Integer.toHexString(i+1).toUpperCase();
             }
         }
         //no match, return the original string
