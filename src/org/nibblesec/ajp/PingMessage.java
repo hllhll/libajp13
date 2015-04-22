@@ -11,7 +11,8 @@ package org.nibblesec.ajp;
 class PingMessage
         extends AbstractAjpMessage {
 
-    //@TODO Reverse any implementation with the Ping (not CPing) type 
+    //@TODO Reverse any implementation with the Ping (not CPing) type. 
+    //I haven't seen so far.
     PingMessage() {
         super(Constants.PACKET_TYPE_PING);
     }

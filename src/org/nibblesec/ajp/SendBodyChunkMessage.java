@@ -51,6 +51,6 @@ class SendBodyChunkMessage
 
     @Override
     public String getDescription() {
-        return "Send a chunk of the body from the servlet container to the web server";
+        return "Send a chunk of the body from the servlet container to the web server. Content: 0x" + AjpReader.getHex(bytes);
     }
 }

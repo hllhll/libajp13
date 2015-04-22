@@ -22,8 +22,8 @@ class ShutdownMessage
 
     @Override
     public String getDescription() {
-        return "The web server asks the container to shut itself down. The container "
-                + "will only actually do the Shutdown if the request comes from the "
+        return "The web server asks the container to shut itself down. (Hopefully) the container "
+                + "will only perform the Shutdown if the request comes from the "
                 + "same machine on which it's hosted";
     }
 

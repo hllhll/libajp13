@@ -14,7 +14,7 @@ import java.io.InputStream;
 class DataMessage
         extends AbstractAjpMessage {
 
-    private byte[] bodyData;
+    private final byte[] bodyData;
 
     DataMessage(byte[] bodyData) throws IOException {
         super(Constants.PACKET_TYPE_DATA);

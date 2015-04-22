@@ -68,7 +68,7 @@ class SendHeadersMessage
     }
 
     static SendHeadersMessage readFrom(InputStream in) throws IOException {
-        List<Pair<String, String>> headers = new LinkedList<Pair<String, String>>();
+        List<Pair<String, String>> headers = new LinkedList<>();
         int statusCode = AjpReader.readInt(in);
         String statusMessage = AjpReader.readString(in);
         int numHeaders = AjpReader.readInt(in);
@@ -94,6 +94,6 @@ class SendHeadersMessage
 
     @Override
     public String getDescription() {
-        return "Send the response headers from the servlet container to the web server";
+        return "Send the response headers from the servlet container to the web server. Headers:"+ this.toString();
     }
 }

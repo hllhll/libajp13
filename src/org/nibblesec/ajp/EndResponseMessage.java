@@ -24,7 +24,7 @@ class EndResponseMessage
 
     @Override
     public String toString() {
-        return String.format("END (%sreuse)", reuse ? "Yes" : "No");
+        return String.format("Reuse? %sreuse", reuse ? "Yes" : "No");
     }
 
     static EndResponseMessage readFrom(InputStream in) throws IOException {
@@ -38,7 +38,7 @@ class EndResponseMessage
 
     @Override
     public String getDescription() {
-        return "Marks the end of the response (and thus the request-handling cycle). Reuse? "+ this.toString();
+        return "Marks the end of the response (and thus the request-handling cycle). "+ this.toString();
     }
 
 }

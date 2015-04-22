@@ -135,7 +135,7 @@ class ForwardRequestMessage
 
     @Override
     public String getName() {
-        return "Forward Request";
+        return "Forward Request (AJP's most common packet)";
     }
 
     @Override

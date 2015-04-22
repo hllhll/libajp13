@@ -34,6 +34,6 @@ class GetBodyChunkMessage
 
     @Override
     public String getDescription() {
-        return "Get further data from the request if it hasn't all been transferred yet";
+        return "Get further data ("+length+" bytes) from the request if it hasn't all been transferred yet";
     }
 }
