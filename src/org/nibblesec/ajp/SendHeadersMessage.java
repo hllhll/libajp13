@@ -16,9 +16,9 @@ import java.util.List;
 class SendHeadersMessage
         extends AbstractAjpMessage {
 
-    final int statusCode;
-    final String statusMessage;
-    final List<Pair<String, String>> headers;
+    private int statusCode;
+    private String statusMessage;
+    private List<Pair<String, String>> headers;
 
     SendHeadersMessage(int statusCode, String statusMessage, List<Pair<String, String>> headers) throws IOException {
         super(Constants.PACKET_TYPE_SEND_HEADERS);
@@ -52,6 +52,31 @@ class SendHeadersMessage
         }
         //no match, return the original string
         return name;
+    }
+    
+    //Getters and Setters
+    public int getStatusCode() {
+        return statusCode;
+    }
+
+    public void setStatusCode(int statusCode) {
+        this.statusCode = statusCode;
+    }
+
+    public String getStatusMessage() {
+        return statusMessage;
+    }
+
+    public void setStatusMessage(String statusMessage) {
+        this.statusMessage = statusMessage;
+    }
+
+    public List<Pair<String, String>> getHeaders() {
+        return headers;
+    }
+
+    public void setHeaders(List<Pair<String, String>> headers) {
+        this.headers = headers;
     }
     
     @Override

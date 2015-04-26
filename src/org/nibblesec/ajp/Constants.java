@@ -64,16 +64,50 @@ final class Constants {
         COMMON_ATTRIBUTES.put("stored_method", 0x0D);
     }
     static final int ATTRIBUTE_GENERIC = 0x0A;
-    static final String[] RESPONSE_HEADERS = {
-        "Content-Type", //0xA001
-        "Content-Language", //0xA002
-        "Content-Length", //0xA003
-        "Date", //0xA004
-        "Last-Modified", //0xA005
-        "Location", //0xA006
-        "Set-Cookie", //0xA007
-        "Set-Cookie2", //0xA008
-        "Servlet-Engine", //0xA009
-        "Status", //0xA00A
-        "WWW-Authenticate",}; //0xA00B
+    
+    static final Map<String, Integer> RESPONSE_HEADERS = new HashMap<String, Integer>();
+        static {
+        RESPONSE_HEADERS.put("Content-Type", 0xA001);
+        RESPONSE_HEADERS.put("Content-Language", 0xA002);
+        RESPONSE_HEADERS.put("Content-Length", 0xA003);
+        RESPONSE_HEADERS.put("Date", 0xA004);
+        RESPONSE_HEADERS.put("Last-Modified", 0xA005);
+        RESPONSE_HEADERS.put("Location", 0xA006);
+        RESPONSE_HEADERS.put("Set-Cookie", 0xA007);
+        RESPONSE_HEADERS.put("Set-Cookie2", 0xA008);
+        RESPONSE_HEADERS.put("Servlet-Engine", 0xA009);
+        RESPONSE_HEADERS.put("Status", 0xA00A);
+        RESPONSE_HEADERS.put("WWW-Authenticate", 0xA00B);
+    }
+        
+    static final Map<String, Integer> AJP_METHODS = new HashMap<String, Integer>();
+        static {
+        AJP_METHODS.put("OPTIONS", 0x01);
+        AJP_METHODS.put("GET", 0x02);
+        AJP_METHODS.put("HEAD", 0x03);
+        AJP_METHODS.put("POST", 0x04);
+        AJP_METHODS.put("PUT", 0x05);
+        AJP_METHODS.put("DELETE", 0x06);
+        AJP_METHODS.put("TRACE", 0x07);
+        AJP_METHODS.put("PROPFIND", 0x08);
+        AJP_METHODS.put("PROPPATCH", 0x09);
+        AJP_METHODS.put("MKCOL", 0x0A);
+        AJP_METHODS.put("COPY", 0x0B);
+        AJP_METHODS.put("MOVE", 0x0C);
+        AJP_METHODS.put("LOCK", 0x0D);
+        AJP_METHODS.put("UNLOCK", 0x0E);
+        AJP_METHODS.put("ACL", 0x0F);
+        AJP_METHODS.put("REPORT", 0x10);
+        AJP_METHODS.put("VERSION_CONTROL", 0x11);
+        AJP_METHODS.put("CHECKIN", 0x12);
+        AJP_METHODS.put("CHECKOUT", 0x13);
+        AJP_METHODS.put("UNCHECKOUT", 0x14);
+        AJP_METHODS.put("SEARCH", 0x15);
+        AJP_METHODS.put("MKWORKSPACE", 0x16);
+        AJP_METHODS.put("UPDATE", 0x17);
+        AJP_METHODS.put("LABEL", 0x18);
+        AJP_METHODS.put("MERGE", 0x19);
+        AJP_METHODS.put("BASELINE_CONTROL", 0x1A);
+        AJP_METHODS.put("MKACTIVITY", 0x1B);
+    }
 }

@@ -10,36 +10,47 @@ package org.nibblesec.ajp;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-
 import java.net.URL;
-
 import java.util.LinkedList;
 import java.util.List;
 
 class ForwardRequestMessage
     extends AbstractAjpMessage
 {
-    private AjpMethod method = AjpMethod.GET;
-    private String protocol = "HTTP/1.0";
+    //Mandatory fields
+    private int method;
+    private String protocol;
     private String requestUri;
-    private String remoteAddress = "127.0.0.1";
-    private String remoteHost = "localhost";
+    private String remoteAddr;
+    private String remoteHost;
     private String serverName;
     private int serverPort;
-    private boolean isSsl = false;
-    private final List<Pair<String, String>> headers = new LinkedList<Pair<String, String>>();
-    private final List<Pair<String, String>> attributes = new LinkedList<Pair<String, String>>();
+    private boolean isSsl;
+    private final List<Pair<String, String>> headers = new LinkedList<>();
+    //Optional fields
+    private String context;
+    private String servletPath;
+    private String remoteUser;
+    private String authType;
+    private String queryString;
+    private String jvmRoute;
+    private String sslCert;
+    private String sslCipher;
+    private String sslSession;
+    private final List<Pair<String, String>> attributes = new LinkedList<>();
+    
     
     ForwardRequestMessage() {
+        
+    }
+
+    ForwardRequestMessage(int method, String protocol, String requestUri, String remoteAddr, String remoteHost, String serverName, int serverPort, boolean isSsl, List<Pair<String, String>> headers) {
         super(Constants.PACKET_TYPE_FORWARD_REQUEST);
+        this.method = method;
+        writeInt(statusCode);
     }
-
-    ForwardRequestMessage(URL url) {
-        this(url, AjpMethod.GET, 0);
-    }
-
+    
     ForwardRequestMessage(URL url, AjpMethod method, int contentLength) {
         this();
         setMethod(method);
