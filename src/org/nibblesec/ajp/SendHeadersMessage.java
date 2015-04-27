@@ -12,15 +12,21 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
+/*
+ * This class represents AJP's Send Headers message, from the container to the web server
+ */
 class SendHeadersMessage
-        extends AbstractAjpMessage {
+        extends AbstractAjpMessage
+{
 
     private int statusCode;
     private String statusMessage;
     private List<Pair<String, String>> headers;
 
-    SendHeadersMessage(int statusCode, String statusMessage, List<Pair<String, String>> headers) throws IOException {
+    SendHeadersMessage(int statusCode, String statusMessage, List<Pair<String, String>> headers) throws IOException
+    {
         super(Constants.PACKET_TYPE_SEND_HEADERS);
         this.statusCode = statusCode;
         writeInt(statusCode);
@@ -30,78 +36,84 @@ class SendHeadersMessage
         int numHeaders = headers.size();
         writeInt(numHeaders);
         for (Pair<String, String> header : headers) {
-            String eHeader = encodeHeaders(header.a); 
-            if(eHeader.contains("A0")){
-              //Send HeaderName as Byte
-              writeBytes(AjpReader.toHex(eHeader));
-            }else{
-              //Send HeaderName as String
-              writeString(eHeader, true);  
+            String name = header.a;
+            String value = header.b;
+
+            if (Constants.RESPONSE_HEADERS.containsKey(name.toLowerCase())) {
+                //Send HeaderName as Byte
+                writeByte(Constants.HEADERS_GENERIC);
+                writeByte(Constants.RESPONSE_HEADERS.get(name.toLowerCase()));
+            } else {
+                //Send HeaderName as String
+                writeString(name, true);
             }
             //Send HeaderValue
-            writeString(header.b, true);  
+            writeString(value, true);
         }
     }
 
-    private String encodeHeaders(String name){
-        for(int i=0; i<Constants.RESPONSE_HEADERS.length; i++){
-            if(Constants.RESPONSE_HEADERS[i].equalsIgnoreCase(name)){
-                //return encoding code
-                return "A00"+Integer.toHexString(i+1).toUpperCase();
-            }
-        }
-        //no match, return the original string
-        return name;
-    }
-    
     //Getters and Setters
-    public int getStatusCode() {
+    public int getStatusCode()
+    {
         return statusCode;
     }
 
-    public void setStatusCode(int statusCode) {
+    public void setStatusCode(int statusCode)
+    {
         this.statusCode = statusCode;
     }
 
-    public String getStatusMessage() {
+    public String getStatusMessage()
+    {
         return statusMessage;
     }
 
-    public void setStatusMessage(String statusMessage) {
+    public void setStatusMessage(String statusMessage)
+    {
         this.statusMessage = statusMessage;
     }
 
-    public List<Pair<String, String>> getHeaders() {
+    public List<Pair<String, String>> getHeaders()
+    {
         return headers;
     }
 
-    public void setHeaders(List<Pair<String, String>> headers) {
+    public void setHeaders(List<Pair<String, String>> headers)
+    {
         this.headers = headers;
     }
-    
+
     @Override
-    public String toString() {
+    public String toString()
+    {
         StringBuilder ret = new StringBuilder();
         ret.append(statusCode).append(" ").append(statusMessage).append("\n");
+        ret.append("Headers:\n");
         for (Pair<String, String> header : headers) {
             ret.append(header.a).append(": ").append(header.b).append("\n");
         }
-        ret.append("\n");
         return ret.toString();
     }
 
-    static SendHeadersMessage readFrom(InputStream in) throws IOException {
-        List<Pair<String, String>> headers = new LinkedList<>();
+    static SendHeadersMessage readFrom(InputStream in) throws IOException
+    {
         int statusCode = AjpReader.readInt(in);
         String statusMessage = AjpReader.readString(in);
         int numHeaders = AjpReader.readInt(in);
+        List<Pair<String, String>> headers = new LinkedList<>();
         for (int i = 0; i < numHeaders; i++) {
             int b1 = AjpReader.readByte(in);
             int b2 = AjpReader.readByte(in);
 
-            String name;
-            if (b1 == 0xA0) {
-                name = Constants.RESPONSE_HEADERS[b2];
+            String name = "";
+            if (Constants.RESPONSE_HEADERS.containsValue(AjpReader.makeInt(b1, b2))) {
+                for (Map.Entry<String, Integer> entry : Constants.RESPONSE_HEADERS.entrySet()) {
+                    String key = entry.getKey();
+                    Integer value = entry.getValue();
+                    if (value == AjpReader.makeInt(b1, b2)) {
+                        name = key;
+                    }
+                }
             } else {
                 name = AjpReader.readString(AjpReader.makeInt(b1, b2), in);
             }
@@ -111,12 +123,14 @@ class SendHeadersMessage
     }
 
     @Override
-    public String getName() {
+    public String getName()
+    {
         return "Send Headers";
     }
 
     @Override
-    public String getDescription() {
-        return "Send the response headers from the servlet container to the web server. Headers:"+ this.toString();
+    public String getDescription()
+    {
+        return "Send the response headers from the servlet container to the web server.\nContent:\n" + this.toString();
     }
 }

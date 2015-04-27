@@ -11,34 +11,42 @@ package org.nibblesec.ajp;
 import java.io.IOException;
 import java.io.InputStream;
 
+/*
+ * This class represents the end of the response from the container to the web server
+ */
 class EndResponseMessage
-    extends AbstractAjpMessage
+        extends AbstractAjpMessage
 {
+
     final boolean reuse;
 
-    EndResponseMessage(boolean reuse) {
+    EndResponseMessage(boolean reuse)
+    {
         super(Constants.PACKET_TYPE_END_RESPONSE);
         this.reuse = reuse;
         writeBoolean(reuse);
     }
 
     @Override
-    public String toString() {
-        return String.format("Reuse? %sreuse", reuse ? "Yes" : "No");
+    public String toString()
+    {
+        return String.format("Reuse? %s", reuse ? "Yes" : "No");
     }
 
-    static EndResponseMessage readFrom(InputStream in) throws IOException {
+    static EndResponseMessage readFrom(InputStream in) throws IOException
+    {
         return new EndResponseMessage(AjpReader.readBoolean(in));
     }
 
     @Override
-    public String getName() {
+    public String getName()
+    {
         return "End Response";
     }
 
     @Override
-    public String getDescription() {
-        return "Marks the end of the response (and thus the request-handling cycle). "+ this.toString();
+    public String getDescription()
+    {
+        return "Marks the end of the response (and thus the request-handling cycle). " + this.toString();
     }
-
 }

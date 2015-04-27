@@ -48,38 +48,20 @@ public class AjpClientExamples {
         } else {
             myClient = new AjpClientExamples();
         }
-
-        // Test Case 1 - CPing/CPong
-        AjpMessage msg = new CPingMessage();
-        byte[] replyByte = myClient.send(msg.getBytes());
-        AjpMessage reply = AjpReader.parseMessage(replyByte);
-        if (reply instanceof CPongMessage) {
-            System.out.println("[OK] Valid " + ((CPongMessage) reply).getName());
-        }
-
-        // Test Case 2 - Shutdown
-        msg = new ShutdownMessage();
-        myClient.send(msg.getBytes());
         
-        // Test Case 3 - Ping
-        msg = new PingMessage();
-        myClient.send(msg.getBytes());
+      
         
         // Test Case 4 - Data packet (with no previous ForwardRequest)
-        msg = new BodyMessage("ABCD".getBytes().length,"ABCD".getBytes());
-        replyByte = myClient.send(msg.getBytes());
-        reply = AjpReader.parseMessage(replyByte);
+        //msg = new BodyMessage("ABCD".getBytes().length,"ABCD".getBytes());
+        //byte[] replyByte = myClient.send(msg.getBytes());
+        //AjpMessage reply = AjpReader.parseMessage(replyByte);
         
         // Test Case 5 -SendHeadersMessage
         List<Pair<String, String>> headers = new LinkedList<>();
         headers.add(Pair.make("Status","StatusHeaderValue")); //compress header
         headers.add(Pair.make("CustomHeader","CustomHeaderValue")); 
-        msg = new SendHeadersMessage(200,"OK",headers);
-        replyByte = myClient.send(msg.getBytes());
-        
-        // Test Case 6 - SendBodyChunkMessage
-        msg = new SendBodyChunkMessage(4,"ABCD".getBytes());
-        replyByte = myClient.send(msg.getBytes());
+        AjpMessage msg = new SendHeadersMessage(200,"OK",headers);
+        byte[] replyByte = myClient.send(msg.getBytes());
     }
 
     private byte[] send(byte[] data) throws UnsupportedEncodingException {

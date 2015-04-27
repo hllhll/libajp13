@@ -11,10 +11,14 @@ package org.nibblesec.ajp;
 import java.io.IOException;
 import java.io.OutputStream;
 
-interface AjpMessage {
+/*
+ * This is the interface for all AJP messages
+ */
+interface AjpMessage
+{
 
     byte[] getBytes(); //returns the raw bytes
-    
+
     void writeTo(OutputStream out) throws IOException; //writes to a given outputstream
 
     String getName(); //returns a meaningful name for the packet type

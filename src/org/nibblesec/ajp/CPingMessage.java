@@ -8,21 +8,27 @@
  */
 package org.nibblesec.ajp;
 
+/*
+ * This class represents a CPing packet from the server to the container
+ */
 class CPingMessage
-    extends AbstractAjpMessage
+        extends AbstractAjpMessage
 {
-    CPingMessage() {
-        super(Constants.PACKET_TYPE_CPING); 
+
+    CPingMessage()
+    {
+        super(Constants.PACKET_TYPE_CPING);
     }
 
     @Override
-    public String getName() {
+    public String getName()
+    {
         return "CPing";
     }
 
     @Override
-    public String getDescription() {
+    public String getDescription()
+    {
         return "The web server asks the container to respond quickly with a CPong";
     }
-
 }

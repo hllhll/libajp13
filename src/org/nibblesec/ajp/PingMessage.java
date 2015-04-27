@@ -8,21 +8,28 @@
  */
 package org.nibblesec.ajp;
 
+/*
+ * This class represents a Ping (not CPing!) packet from the server to the container.
+ * @TODO Reverse any implementation of the ping type handler
+ */
 class PingMessage
-        extends AbstractAjpMessage {
+        extends AbstractAjpMessage
+{
 
-    //@TODO Reverse any implementation with the Ping (not CPing!) type.
-    PingMessage() {
+    PingMessage()
+    {
         super(Constants.PACKET_TYPE_PING);
     }
 
     @Override
-    public String getName() {
+    public String getName()
+    {
         return "Ping";
     }
 
     @Override
-    public String getDescription() {
+    public String getDescription()
+    {
         return "The web server asks the container to take control (secure login phase)";
     }
 }

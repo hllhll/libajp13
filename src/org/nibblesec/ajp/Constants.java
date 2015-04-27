@@ -11,14 +11,22 @@ package org.nibblesec.ajp;
 import java.util.HashMap;
 import java.util.Map;
 
+/*
+ * This class contains all magic numbers and encoding bytes
+ */
 final class Constants {
+    
+    //Header magic numbers
+    static final byte[] AJP_TAG_REQ = {0x12, 0x34};
+    static final byte[] AJP_TAG_RESP = {0x41, 0x42};
 
-    //Request
-    static final int PACKET_TYPE_DATA = 0; //body data packets don't have a msg type
+    //Requests
+    static final int PACKET_TYPE_DATA = 0; //body data packets don't use the msg type
     static final int PACKET_TYPE_FORWARD_REQUEST = 2;
     static final int PACKET_TYPE_SHUTDOWN = 7;
     static final int PACKET_TYPE_PING = 8;
     static final int PACKET_TYPE_CPING = 10;
+    
     //Responses
     static final int PACKET_TYPE_SEND_BODY_CHUNK = 3;
     static final int PACKET_TYPE_SEND_HEADERS = 4;
@@ -26,28 +34,30 @@ final class Constants {
     static final int PACKET_TYPE_GET_BODY_CHUNK = 6;
     static final int PACKET_TYPE_CPONG = 9;
     
-    static final int REQUEST_TERMINATOR = 0xff;
+    static final int REQUEST_TERMINATOR = 0xFF;
+    static final int HEADERS_GENERIC = 0xA0;
+    
     static final Map<String, Integer> COMMON_HEADERS = new HashMap<>();
-
     static {
-        COMMON_HEADERS.put("accept", 0xA001);
-        COMMON_HEADERS.put("accept-charset", 0xA002);
-        COMMON_HEADERS.put("accept-encoding", 0xA003);
-        COMMON_HEADERS.put("accept-language", 0xA004);
-        COMMON_HEADERS.put("authorization", 0xA005);
-        COMMON_HEADERS.put("connection", 0xA006);
-        COMMON_HEADERS.put("content-type", 0xA007);
-        COMMON_HEADERS.put("content-length", 0xA008);
-        COMMON_HEADERS.put("cookie", 0xA009);
-        COMMON_HEADERS.put("cookie2", 0xA00A);
-        COMMON_HEADERS.put("host", 0xA00B);
-        COMMON_HEADERS.put("pragma", 0xA00C);
-        COMMON_HEADERS.put("referer", 0xA00D);
-        COMMON_HEADERS.put("user-agent", 0xA00E);
+        COMMON_HEADERS.put("accept", 0x01);
+        COMMON_HEADERS.put("accept-charset", 0x02);
+        COMMON_HEADERS.put("accept-encoding", 0x03);
+        COMMON_HEADERS.put("accept-language", 0x04);
+        COMMON_HEADERS.put("authorization", 0x05);
+        COMMON_HEADERS.put("connection", 0x06);
+        COMMON_HEADERS.put("content-type", 0x07);
+        COMMON_HEADERS.put("content-length", 0x08);
+        COMMON_HEADERS.put("cookie", 0x09);
+        COMMON_HEADERS.put("cookie2", 0x0A);
+        COMMON_HEADERS.put("host", 0x0B);
+        COMMON_HEADERS.put("pragma", 0x0C);
+        COMMON_HEADERS.put("referer", 0x0D);
+        COMMON_HEADERS.put("user-agent", 0x0E);
     }
+    
     static final String ATTRIBUTE_QUERY_STRING = "query_string";
-    static final Map<String, Integer> COMMON_ATTRIBUTES = new HashMap<String, Integer>();
-
+    static final String ATTRIBUTE_REQATTR_STRING = "req_attribute";
+    static final Map<String, Integer> COMMON_ATTRIBUTES = new HashMap<>();
     static {
         COMMON_ATTRIBUTES.put("context", 0x01);
         COMMON_ATTRIBUTES.put("servlet_path", 0x02);
@@ -58,29 +68,28 @@ final class Constants {
         COMMON_ATTRIBUTES.put("ssl_cert", 0x07);
         COMMON_ATTRIBUTES.put("ssl_cipher", 0x08);
         COMMON_ATTRIBUTES.put("ssl_session", 0x09);
-        COMMON_ATTRIBUTES.put("req_attribute", 0x0A);
+        COMMON_ATTRIBUTES.put(ATTRIBUTE_REQATTR_STRING, 0x0A);
         COMMON_ATTRIBUTES.put("ssl_key_size", 0x0B);
         COMMON_ATTRIBUTES.put("secret", 0x0C);
         COMMON_ATTRIBUTES.put("stored_method", 0x0D);
     }
-    static final int ATTRIBUTE_GENERIC = 0x0A;
     
-    static final Map<String, Integer> RESPONSE_HEADERS = new HashMap<String, Integer>();
+    static final Map<String, Integer> RESPONSE_HEADERS = new HashMap<>();
         static {
-        RESPONSE_HEADERS.put("Content-Type", 0xA001);
-        RESPONSE_HEADERS.put("Content-Language", 0xA002);
-        RESPONSE_HEADERS.put("Content-Length", 0xA003);
-        RESPONSE_HEADERS.put("Date", 0xA004);
-        RESPONSE_HEADERS.put("Last-Modified", 0xA005);
-        RESPONSE_HEADERS.put("Location", 0xA006);
-        RESPONSE_HEADERS.put("Set-Cookie", 0xA007);
-        RESPONSE_HEADERS.put("Set-Cookie2", 0xA008);
-        RESPONSE_HEADERS.put("Servlet-Engine", 0xA009);
-        RESPONSE_HEADERS.put("Status", 0xA00A);
-        RESPONSE_HEADERS.put("WWW-Authenticate", 0xA00B);
+        RESPONSE_HEADERS.put("content-type", 0x01);
+        RESPONSE_HEADERS.put("content-language", 0x02);
+        RESPONSE_HEADERS.put("content-length", 0x03);
+        RESPONSE_HEADERS.put("date", 0x04);
+        RESPONSE_HEADERS.put("last-modified", 0x05);
+        RESPONSE_HEADERS.put("location", 0x06);
+        RESPONSE_HEADERS.put("set-cookie", 0x07);
+        RESPONSE_HEADERS.put("set-cookie2", 0x08);
+        RESPONSE_HEADERS.put("servlet-engine", 0x09);
+        RESPONSE_HEADERS.put("status", 0x0A);
+        RESPONSE_HEADERS.put("www-authenticate", 0x0B);
     }
         
-    static final Map<String, Integer> AJP_METHODS = new HashMap<String, Integer>();
+    static final Map<String, Integer> AJP_METHODS = new HashMap<>();
         static {
         AJP_METHODS.put("OPTIONS", 0x01);
         AJP_METHODS.put("GET", 0x02);

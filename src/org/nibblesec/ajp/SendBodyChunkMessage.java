@@ -12,13 +12,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 
+/*
+ * This class represents AJP's Send Body Chunk message, from the container to the web server
+ */
 class SendBodyChunkMessage
-        extends AbstractAjpMessage {
+        extends AbstractAjpMessage
+{
 
     final int length;
     final byte[] bytes;
 
-    SendBodyChunkMessage(int length, byte[] bytes) throws IOException {
+    SendBodyChunkMessage(int length, byte[] bytes) throws IOException
+    {
         super(Constants.PACKET_TYPE_SEND_BODY_CHUNK);
         this.length = length;
         writeInt(length);
@@ -27,16 +32,18 @@ class SendBodyChunkMessage
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         try {
             return new String(bytes, "UTF-8");
         } catch (UnsupportedEncodingException ex) {
-            System.out.println("[KO] SendBodyChunkMessage UnsupportedEncodingException: " + ex.getLocalizedMessage());
+            System.out.println("[!] SendBodyChunkMessage UnsupportedEncodingException: " + ex.getLocalizedMessage());
             return "InvalidEncoding";
         }
     }
 
-    static SendBodyChunkMessage readFrom(InputStream in) throws IOException {
+    static SendBodyChunkMessage readFrom(InputStream in) throws IOException
+    {
         int length = AjpReader.readInt(in);
         byte[] bytes = new byte[length];
         AjpReader.fullyRead(bytes, in);
@@ -44,12 +51,14 @@ class SendBodyChunkMessage
     }
 
     @Override
-    public String getName() {
+    public String getName()
+    {
         return "Send Body Chunk";
     }
 
     @Override
-    public String getDescription() {
-        return "Send a chunk of the body from the servlet container to the web server. Content: 0x" + AjpReader.getHex(bytes);
+    public String getDescription()
+    {
+        return "Send a chunk of the body from the servlet container to the web server.\nContent:\n0x" + AjpReader.getHex(bytes);
     }
 }
