@@ -106,11 +106,12 @@ class SendHeadersMessage
             int b2 = AjpReader.readByte(in);
 
             String name = "";
-            if (Constants.RESPONSE_HEADERS.containsValue(AjpReader.makeInt(b1, b2))) {
+            if (b1 == Constants.HEADERS_GENERIC && Constants.RESPONSE_HEADERS.containsValue(b2)) {
                 for (Map.Entry<String, Integer> entry : Constants.RESPONSE_HEADERS.entrySet()) {
                     String key = entry.getKey();
                     Integer value = entry.getValue();
-                    if (value == AjpReader.makeInt(b1, b2)) {
+                    if (value == b2) {
+                        //According to RFC 7230, header field names are case-insensitive
                         name = key;
                     }
                 }

@@ -137,5 +137,16 @@ public class AjpReaderTest
             (byte) 0x78, (byte) 0x29, (byte) 0x00};
         AjpMessage msg = AjpReader.parseMessage(sendHeaders);
         assertThat(msg, instanceOf(SendHeadersMessage.class));
+        assertThat(msg.getDescription(), is("Send the response headers from the servlet container to the web server.\n"
+                + "Content:\n"
+                + "200 OK\n"
+                + "Headers:\n"
+                + "last-modified: Sun, 01 Mar 2015 06:31:21 GMT\n"
+                + "Expires: Tue, 26 Apr 2016 04:24:31 GMT\n"
+                + "Accept-Ranges: bytes\n"
+                + "content-type: image/png\n"
+                + "X-Content-Type-Options: nosniff\n"
+                + "content-length: 814\n"
+                + "Server: Server: Jetty(7.x.x)\n"));
     }
 }

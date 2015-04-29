@@ -1,4 +1,4 @@
-# libajp13 - A complete AJPv1.3 Java library implementation
+# libajp13 - A complete AJPv1.3 Java library
 As far as I know, *libajp13* is the only client/server implementation of the Apache JServ Protocol version 1.3 (ajp13), based on the [Apache Protocol Reference](https://tomcat.apache.org/connectors-doc/ajp/ajpv13a.html).
 
 This client library has been developed from Espen Wiborg's [ajp_client](https://github.com/espenhw/ajp-client) original code. Licensed under the Apache License, Version 2.0. 
