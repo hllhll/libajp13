@@ -5,7 +5,7 @@
 The library has been developed from Espen Wiborg's [ajp_client](https://github.com/espenhw/ajp-client), licensed under the Apache License 2.0.
 At this point, most of the code has been refactored and improved to support *all* AJP13 packet types.  
 
-![AJP13 in Wireshark](http://i.imgur.com/FWvfI0fl.png "AJP13 in Wireshark")
+![AJP13 in Wireshark](http://i.imgur.com/e9wTKDS.png "AJP13 in Wireshark")
 
 As of 04/02/2015, the JaCoCoverage analysis of project "libajp13" reports: 
 ![Test Code Coverage](http://i.imgur.com/hTqSSZR.png"Test Code Coverage")
