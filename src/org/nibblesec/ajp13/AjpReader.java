@@ -1,12 +1,12 @@
 /*
- * AjpReader.java
+ * libajp13 - AjpReader.java
  *
  * Copyright (c) 2015 Luca Carettoni
  * Copyright (c) 2010 Espen Wiborg
  *
  * Licensed under the Apache License, Version 2.0
  */
-package org.nibblesec.ajp;
+package org.nibblesec.ajp13;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -14,12 +14,20 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 
-/*
- * This class provides utility methods for parsing AJP messages, sent or received from the J2EE container
+/**
+ * This class provides several utility methods for parsing and displaying AJP
+ * messages
  */
-final class AjpReader
+final public class AjpReader
 {
 
+    /**
+     * Parse and create an AJP message from an array of bytes
+     *
+     * @param bytes[] Message
+     * @throws IOException
+     * @return Instance of AjpMessage
+     */
     static public AjpMessage parseMessage(byte[] reply) throws IOException
     {
         //AJP_TAG + size (2 bytes) + [type]
@@ -35,7 +43,7 @@ final class AjpReader
             fullyRead(bytes, in);
 
             switch (type) {
-                //From WebServer to Container
+                //From Web Server to J2EE Container
                 case Constants.PACKET_TYPE_CPING:
                     return new CPingMessage();
                 case Constants.PACKET_TYPE_FORWARD_REQUEST:
@@ -44,7 +52,7 @@ final class AjpReader
                     return new ShutdownMessage();
                 case Constants.PACKET_TYPE_PING:
                     return new PingMessage();
-                //From Container to WebServer
+                //From J2EE Container to Web Server
                 case Constants.PACKET_TYPE_CPONG:
                     return new CPongMessage();
                 case Constants.PACKET_TYPE_SEND_HEADERS:
@@ -88,12 +96,17 @@ final class AjpReader
 
     static String readString(int len, InputStream in) throws IOException
     {
-        return new String(readBytes(len, true, in), "UTF-8");
+        byte[] strContent = readBytes(len, true, in);
+        if (strContent != null && strContent.length > 0) {
+            return new String(strContent, "UTF-8");
+        } else {
+            return "";
+        }
     }
 
-    static byte[] readBytes(InputStream in) throws IOException
+    static byte[] readBytes(int len, InputStream in) throws IOException
     {
-        int len = readInt(in);
+        //do not expect a null byte
         return readBytes(len, false, in);
     }
 
@@ -105,7 +118,9 @@ final class AjpReader
         byte[] buf = new byte[len];
         fullyRead(buf, in);
         // Skip the terminating \0 if we're retrieving a String
-        if(nullByte) in.read();
+        if (nullByte) {
+            in.read();
+        }
         return buf;
     }
 
@@ -131,8 +146,13 @@ final class AjpReader
         return readByte(in) > 0;
     }
 
-    //Convert a byte array to a string representation of hex values
-    static String getHex(byte[] raw)
+    /**
+     * Convert a byte array to a string representation of hex values
+     *
+     * @param bytes[] input (e.g. [65,..])
+     * @return input converted as string representation of hex values (e.g. [41,..])
+     */
+    public static String getHex(byte[] raw)
     {
         final String HEXES = "0123456789ABCDEF";
         if (raw == null) {
@@ -145,8 +165,13 @@ final class AjpReader
         return hex.toString();
     }
 
-    //Convert a string representation of hex values to byte array
-    static byte[] toHex(String s)
+    /**
+     * Convert a string representation of hex values to byte array
+     *
+     * @param String input (e.g. "41")
+     * @return input converted as byte array (e.g. [65,..])
+     */
+    public static byte[] toHex(String s)
     {
         int len = s.length();
         byte[] data = new byte[len / 2];

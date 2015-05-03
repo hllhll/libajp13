@@ -1,12 +1,12 @@
 /*
- * SendHeadersMessage.java
+ * libajp13 - SendHeadersMessage.java
  *
  * Copyright (c) 2015 Luca Carettoni
  * Copyright (c) 2010 Espen Wiborg
  *
  * Licensed under the Apache License, Version 2.0
  */
-package org.nibblesec.ajp;
+package org.nibblesec.ajp13;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,10 +14,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-/*
- * This class represents AJP's Send Headers message, from the container to the web server
+/**
+ * AJP's Send Headers message, from the J2EE container to the web server
  */
-class SendHeadersMessage
+public class SendHeadersMessage
         extends AbstractAjpMessage
 {
 
@@ -25,7 +25,16 @@ class SendHeadersMessage
     private String statusMessage;
     private List<Pair<String, String>> headers;
 
-    SendHeadersMessage(int statusCode, String statusMessage, List<Pair<String, String>> headers) throws IOException
+    /**
+     * SendHeadersMessage constructor
+     *
+     * @param statusCode The HTTP status code (e.g. 200)
+     * @param statusMessage The status message (e.g. OK)
+     * @param headers A list of Pair<String, String>> containing all headers
+     * @throws IOException
+     * @return Instance of SendHeadersMessage
+     */
+    public SendHeadersMessage(int statusCode, String statusMessage, List<Pair<String, String>> headers) throws IOException
     {
         super(Constants.PACKET_TYPE_SEND_HEADERS);
         this.statusCode = statusCode;
@@ -52,36 +61,36 @@ class SendHeadersMessage
         }
     }
 
-    //Getters and Setters
+    /**
+     * Returns the HTTP status code (e.g. 200)
+     *
+     * @return the message's status code
+     */
     public int getStatusCode()
     {
         return statusCode;
     }
 
-    public void setStatusCode(int statusCode)
-    {
-        this.statusCode = statusCode;
-    }
-
+    /**
+     * Returns the status message (e.g. OK)
+     *
+     * @return the message's status
+     */
     public String getStatusMessage()
     {
         return statusMessage;
     }
 
-    public void setStatusMessage(String statusMessage)
-    {
-        this.statusMessage = statusMessage;
-    }
-
+    /**
+     * Returns the message HTTP headers
+     *
+     * @return the message's headers as List<Pair<String, String>>
+     */
     public List<Pair<String, String>> getHeaders()
     {
         return headers;
     }
 
-    public void setHeaders(List<Pair<String, String>> headers)
-    {
-        this.headers = headers;
-    }
 
     @Override
     public String toString()
@@ -123,12 +132,22 @@ class SendHeadersMessage
         return new SendHeadersMessage(statusCode, statusMessage, headers);
     }
 
+    /**
+     * Returns a meaningful name for the packet type
+     *
+     * @return Name of the packet type
+     */
     @Override
     public String getName()
     {
         return "Send Headers";
     }
 
+    /**
+     * Returns a description for the packet type
+     *
+     * @return Description of the packet type.
+     */
     @Override
     public String getDescription()
     {

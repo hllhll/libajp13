@@ -1,22 +1,22 @@
 /*
- * AbstractAjpMessage.java
+ * libajp13 - AbstractAjpMessage.java
  *
  * Copyright (c) 2015 Luca Carettoni
  * Copyright (c) 2010 Espen Wiborg
  *
  * Licensed under the Apache License, Version 2.0
  */
-package org.nibblesec.ajp;
+package org.nibblesec.ajp13;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 
-/*
- * This class represents an abstract AJP message, sent or received from the J2EE container
+/**
+ * Partial implementation of the AJP message; all AJP messages extend this class
  */
-abstract class AbstractAjpMessage implements AjpMessage
+public abstract class AbstractAjpMessage implements AjpMessage
 {
 
     private final ByteArrayOutputStream bos;
@@ -43,6 +43,12 @@ abstract class AbstractAjpMessage implements AjpMessage
         }
     }
 
+    /**
+     * Write an AJP message to a given OutputStream
+     *
+     * @param OutputStream Destination output stream
+     * @throws IOException
+     */
     @Override
     public void writeTo(OutputStream out) throws IOException
     {
@@ -50,6 +56,11 @@ abstract class AbstractAjpMessage implements AjpMessage
         out.flush();
     }
 
+    /**
+     * Returns the byte array of the current AJPMessage instance
+     *
+     * @return The AJP packet as array of bytes
+     */
     @Override
     public final byte[] getBytes()
     {
@@ -72,23 +83,23 @@ abstract class AbstractAjpMessage implements AjpMessage
      * Integer - two bytes (from 0 to 2^16)
      * String - variable sized string (2 bytes for size + X bytes string + \0)
      */
-    protected void writeByte(int b)
+    void writeByte(int b)
     {
         bos.write(b);
     }
 
-    protected void writeBytes(byte[] ba) throws IOException
+    void writeBytes(byte[] ba) throws IOException
     {
         bos.write(ba);
     }
 
-    protected void writeInt(int i)
+    void writeInt(int i)
     {
         bos.write((i & 0xff00) >> 8);
         bos.write(i & 0x00ff);
     }
 
-    protected void writeBoolean(boolean b)
+    void writeBoolean(boolean b)
     {
         bos.write(b ? 1 : 0);
     }
@@ -97,7 +108,7 @@ abstract class AbstractAjpMessage implements AjpMessage
      * @param s the string to write in the specific message
      * @param term whether or not append the null-byte terminator
      */
-    protected void writeString(String s, boolean term)
+    void writeString(String s, boolean term)
     {
         if (s == null) {
             bos.write(0);
@@ -115,23 +126,5 @@ abstract class AbstractAjpMessage implements AjpMessage
                 System.out.println("[!] AbstractAjpMessage UnsupportedEncodingException: " + ex.getLocalizedMessage());
             }
         }
-    }
-}
-
-class Pair<T, U>
-{
-
-    final T a;
-    final U b;
-
-    Pair(T a, U b)
-    {
-        this.a = a;
-        this.b = b;
-    }
-
-    static <K, V> Pair<K, V> make(K k, V v)
-    {
-        return new Pair<>(k, v);
     }
 }

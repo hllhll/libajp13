@@ -1,12 +1,12 @@
 /*
- * Constants.java
+ * libajp13 - Constants.java
  *
  * Copyright (c) 2015 Luca Carettoni
  * Copyright (c) 2010 Espen Wiborg
  *
  * Licensed under the Apache License, Version 2.0
  */
-package org.nibblesec.ajp;
+package org.nibblesec.ajp13;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -64,12 +64,13 @@ final class Constants {
         COMMON_ATTRIBUTES.put("remote_user", 0x03);
         COMMON_ATTRIBUTES.put("auth_type", 0x04);
         COMMON_ATTRIBUTES.put(ATTRIBUTE_QUERY_STRING, 0x05);
-        COMMON_ATTRIBUTES.put("route", 0x06);
+        COMMON_ATTRIBUTES.put("jvm_route", 0x06);
+        COMMON_ATTRIBUTES.put("route", 0x06); //In some implementations, it's abbreviated
         COMMON_ATTRIBUTES.put("ssl_cert", 0x07);
         COMMON_ATTRIBUTES.put("ssl_cipher", 0x08);
         COMMON_ATTRIBUTES.put("ssl_session", 0x09);
         COMMON_ATTRIBUTES.put(ATTRIBUTE_REQATTR_STRING, 0x0A);
-        COMMON_ATTRIBUTES.put("ssl_key_size", 0x0B);
+        COMMON_ATTRIBUTES.put("ssl_key_size", 0x0B); // ajp14 originally, now in ajp13 with jk 1.2/2.0
         COMMON_ATTRIBUTES.put("secret", 0x0C);
         COMMON_ATTRIBUTES.put("stored_method", 0x0D);
     }

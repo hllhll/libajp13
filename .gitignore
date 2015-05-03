@@ -16,6 +16,8 @@ core
 nbproject/*
 libs/*
 manifest.mf
+.jacocoverage/
+coverage/
  
 #java specific
 *.class

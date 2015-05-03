@@ -1,24 +1,28 @@
 /*
- * ForwardRequestMessage.java
+ * libajp13 - ForwardRequestMessage.java
  *
  * Copyright (c) 2015 Luca Carettoni
  * Copyright (c) 2010 Espen Wiborg
  *
  * Licensed under the Apache License, Version 2.0
  */
-package org.nibblesec.ajp;
+package org.nibblesec.ajp13;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetAddress;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-/*
+/**
+ * AJP's ForwardRequestMessage, from the web server to the J2EE container
+ * <p>
  * This class begins the request-processing cycle from the server to the container
  */
-class ForwardRequestMessage
+public class ForwardRequestMessage
         extends AbstractAjpMessage
 {
 
@@ -35,12 +39,23 @@ class ForwardRequestMessage
     //Optional fields
     private List<Pair<String, String>> attributes = new LinkedList<>();
 
-    ForwardRequestMessage(int method, URL url, String remoteAddr,
-            String remoteHost, List<Pair<String, String>> headers,
-            List<Pair<String, String>> attributes)
+    /**
+     * Simplified ForwardRequestMessage constructor
+     *
+     * @param int The HTTP verb
+     * @param URL The message URL
+     * @param headers The request HTTP headers
+     * @param attributes The request HTTP attributes
+     * @throws UnknownHostException
+     * @return Instance of ForwardRequestMessage
+     */
+    public ForwardRequestMessage(int method, URL url,
+            List<Pair<String, String>> headers,
+            List<Pair<String, String>> attributes) throws UnknownHostException
     {
-        this(method, url.getProtocol(), url.getPath(), remoteAddr, remoteHost,
-                url.getHost(), ((url.getPort() == -1) ? url.getDefaultPort() : url.getPort()),
+        this(method, "HTTP/1.1", url.getPath(), InetAddress.getLocalHost().getHostAddress(),
+                InetAddress.getLocalHost().getCanonicalHostName(), url.getHost(),
+                ((url.getPort() == -1) ? url.getDefaultPort() : url.getPort()),
                 url.getProtocol().equalsIgnoreCase("https"), headers, attributes);
 
         if (url.getQuery() != null) {
@@ -48,7 +63,22 @@ class ForwardRequestMessage
         }
     }
 
-    ForwardRequestMessage(int method, String protocol, String requestUri,
+    /**
+     * Complete ForwardRequestMessage constructor
+     *
+     * @param int The HTTP verb
+     * @param String The HTTP protocol version (HTTP/1.0 or HTTP/1.1)
+     * @param String The request path (e.g. /logs/)
+     * @param String The client's IP address (e.g. web server's IP)
+     * @param String The client's hostname (e.g. web server's hostname)
+     * @param String The server's IP domain name (e.g. container's FQDN)
+     * @param int The server's TCP port
+     * @param boolean Does it use SSL?
+     * @param headers The request HTTP headers
+     * @param attributes The request HTTP attributes
+     * @return Instance of ForwardRequestMessage
+     */
+    public ForwardRequestMessage(int method, String protocol, String requestUri,
             String remoteAddr, String remoteHost, String serverName,
             int serverPort, boolean isSsl, List<Pair<String, String>> headers,
             List<Pair<String, String>> attributes)
@@ -58,7 +88,7 @@ class ForwardRequestMessage
 
         this.method = method;
         writeByte(method);
-        this.protocol = protocol;
+        this.protocol = protocol; //e.g HTTP/1.1
         writeString(protocol, true);
         this.requestUri = requestUri;
         writeString(requestUri, true);
@@ -68,13 +98,16 @@ class ForwardRequestMessage
         writeString(remoteHost, true); //e.g. localhost
         this.serverName = serverName;
         writeString(serverName, true);
-        addHeader("Host", serverName);
         this.serverPort = serverPort;
         writeInt(serverPort);
         this.isSsl = isSsl;
         writeBoolean(isSsl);
 
         //headers
+        if (headers == null) {
+            headers = new LinkedList<>();
+        }
+        addHeader("Host", serverName); //default header
         this.headers = headers;
         writeInt(headers.size());
         for (Pair<String, String> header : headers) {
@@ -94,6 +127,9 @@ class ForwardRequestMessage
         }
 
         //attributes (optionals)
+        if (attributes == null) {
+            attributes = new LinkedList<>();
+        }
         this.attributes = attributes;
         for (Pair<String, String> attribute : attributes) {
             String name = attribute.a;
@@ -116,136 +152,153 @@ class ForwardRequestMessage
         writeByte(Constants.REQUEST_TERMINATOR);
     }
 
-    static public ForwardRequestMessage ForwardRequestMessageGetBuilder(URL url)
+    /**
+     * ForwardRequestMessageGetBuilder. An easy way to create ForwardRequest
+     * messages for HTTP GET request
+     *
+     * @param URL The message URL
+     * @throws UnknownHostException
+     * @return Instance of ForwardRequestMessage
+     */
+    static public ForwardRequestMessage ForwardRequestMessageGetBuilder(URL url) throws UnknownHostException
     {
-        return new ForwardRequestMessage(2, url, "127.0.0.1", "localhost", null, null);
+        return new ForwardRequestMessage(2, url, null, null);
     }
 
-    static public ForwardRequestMessage ForwardRequestMessagePostBuilder(URL url, int contentLength)
+    /**
+     * ForwardRequestMessagePostBuilder. An easy way to create ForwardRequest
+     * messages for HTTP POST request
+     *
+     * @param URL The message URL
+     * @param int The expected Content-Length
+     * @throws UnknownHostException
+     * @return Instance of ForwardRequestMessage
+     */
+    static public ForwardRequestMessage ForwardRequestMessagePostBuilder(URL url, int contentLength) throws UnknownHostException
     {
         List<Pair<String, String>> headers = new LinkedList<>();
         headers.add(Pair.make("Content-Length", String.valueOf(contentLength)));
         if (contentLength > 0) {
             headers.add(Pair.make("Content-Type", "application/x-www-form-urlencoded"));
         }
-        return new ForwardRequestMessage(4, url, "127.0.0.1", "localhost", headers, null);
+        return new ForwardRequestMessage(4, url, headers, null);
     }
 
+    /**
+     * Returns the HTTP verb used by this message
+     *
+     * @return the verb used within the ForwardRequestMessage
+     */
     public int getMethod()
     {
         return method;
     }
 
-    public void setMethod(int method)
-    {
-        this.method = method;
-    }
-
+    /**
+     * Returns the HTTP protocol used by this message
+     *
+     * @return the version of the HTTP protocol
+     */
     public String getProtocol()
     {
         return protocol;
     }
 
-    public void setProtocol(String protocol)
-    {
-        this.protocol = protocol;
-    }
-
+    /**
+     * Returns the HTTP Uri
+     *
+     * @return the message's URI
+     */
     public String getRequestUri()
     {
         return requestUri;
     }
 
-    public void setRequestUri(String requestUri)
-    {
-        this.requestUri = requestUri;
-    }
-
+    /**
+     * Returns the client's IP address
+     *
+     * @return Client's IP address
+     */
     public String getRemoteAddr()
     {
         return remoteAddr;
     }
 
-    public void setRemoteAddr(String remoteAddr)
-    {
-        this.remoteAddr = remoteAddr;
-    }
-
+    /**
+     * Returns the client's hostname
+     *
+     * @return Client's hostname
+     */
     public String getRemoteHost()
     {
         return remoteHost;
     }
 
-    public void setRemoteHost(String remoteHost)
-    {
-        this.remoteHost = remoteHost;
-    }
-
+    /**
+     * Returns the server's FQDM
+     *
+     * @return Server's domain name
+     */
     public String getServerName()
     {
         return serverName;
     }
 
-    public void setServerName(String serverName)
-    {
-        this.serverName = serverName;
-    }
-
+    /**
+     * Returns the server's TCP port
+     *
+     * @return Server's TCP port
+     */
     public int getServerPort()
     {
         return serverPort;
     }
 
-    public void setServerPort(int serverPort)
-    {
-        this.serverPort = serverPort;
-    }
-
-    public boolean isIsSsl()
+    /**
+     * Returns whether the HTTP request is over HTTP or HTTPS
+     *
+     * @return true if over SSL,false otherwise
+     */
+    public boolean isSsl()
     {
         return isSsl;
     }
 
-    public void setIsSsl(boolean isSsl)
-    {
-        this.isSsl = isSsl;
-    }
-
+    /**
+     * Returns the message HTTP headers
+     *
+     * @return the message's headers as List<Pair<String, String>>
+     */
     public List<Pair<String, String>> getHeaders()
     {
         return headers;
     }
 
-    public void setHeaders(List<Pair<String, String>> headers)
-    {
-        this.headers = headers;
-    }
-
-    public List<Pair<String, String>> getAttributes()
-    {
-        return attributes;
-    }
-
-    public void setAttributes(List<Pair<String, String>> attributes)
-    {
-        this.attributes = attributes;
-    }
-
-    public final void addHeader(String name, String value)
+    final void addHeader(String name, String value)
     {
         headers.add(Pair.make(name, value));
     }
 
-    public final void addAttribute(String name, String value)
+    final void addAttribute(String name, String value)
     {
         attributes.add(Pair.make(name, value));
     }
 
+    /**
+     * Returns the number of headers in the ForwardRequestMessage packet
+     *
+     * @return the number of headers
+     */
     public int numHeaders()
     {
         return headers.size();
     }
 
+    /**
+     * Returns the number of attributes in the ForwardRequestMessage packet
+     *
+     * @return the number of attributes
+     */
     public int numAttributes()
     {
         return attributes.size();
@@ -339,15 +392,25 @@ class ForwardRequestMessage
         return sb.toString();
     }
 
+    /**
+     * Returns a meaningful name for the packet type
+     *
+     * @return Name of the packet type
+     */
     @Override
     public String getName()
     {
         return "Forward Request (begin the request-processing cycle)";
     }
 
+    /**
+     * Returns a description for the packet type
+     *
+     * @return Description of the packet type.
+     */
     @Override
     public String getDescription()
     {
-        return "Begin the request-processing cycle with the following data.\nRequest:\n" + this.toString();
+        return "Begin the request-processing cycle with the following data.\n" + this.toString();
     }
 }
