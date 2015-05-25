@@ -33,9 +33,13 @@ public class BodyMessage
     {
         super(Constants.PACKET_TYPE_DATA);
         this.length = bytes.length;
-        writeInt(length);
         this.bytes = bytes;
-        writeBytes(bytes);
+
+        //Allow "empty" packets (e.g. if there is no more data in the body)
+        if (length != 0) {
+            writeInt(length);
+            writeBytes(bytes);
+        }
     }
 
     static BodyMessage readFrom(InputStream in) throws IOException

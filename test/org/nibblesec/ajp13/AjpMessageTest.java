@@ -234,6 +234,14 @@ public class AjpMessageTest
     }
     
     @Test
+    public void bodyMessageIsEmpty() throws Exception
+    {
+        AjpMessage body = new BodyMessage(new byte[0]);
+        byte[] bodyBytes = body.getBytes();
+        assertThat(bodyBytes.length, is(4));
+    }
+    
+    @Test
     public void bodyMessageContentDump() throws Exception
     {
         AjpMessage body = new BodyMessage("AAAA".getBytes());
