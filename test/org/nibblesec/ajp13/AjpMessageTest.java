@@ -281,7 +281,7 @@ public class AjpMessageTest
 
         forwardRequest = ForwardRequestMessage.ForwardRequestMessageGetBuilder(new URL("http://192.168.1.1/log/"));
         forwardRequestBytes = forwardRequest.getBytes();
-        assertThat(forwardRequestBytes.length, is(66));
+        assertThat(forwardRequestBytes.length, is(85));
 
         forwardRequest = ForwardRequestMessage.ForwardRequestMessagePostBuilder(new URL("http://192.168.1.1/log/"), 80);
         forwardRequestBytes = forwardRequest.getBytes();

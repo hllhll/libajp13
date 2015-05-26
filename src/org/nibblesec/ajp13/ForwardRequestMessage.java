@@ -20,7 +20,8 @@ import java.util.Map;
 /**
  * AJP's ForwardRequestMessage, from the web server to the J2EE container
  * <p>
- * This class begins the request-processing cycle from the server to the container
+ * This class begins the request-processing cycle from the server to the
+ * container
  */
 public class ForwardRequestMessage
         extends AbstractAjpMessage
@@ -107,8 +108,11 @@ public class ForwardRequestMessage
         if (headers == null) {
             headers = new LinkedList<>();
         }
-        addHeader("Host", serverName); //default header
         this.headers = headers;
+        if (headers.isEmpty()) {
+            //If empty, add default Host header. Otherwise, assume that it's user-supplied
+            addHeader("Host", serverName + ":" + serverPort);
+        }
         writeInt(headers.size());
         for (Pair<String, String> header : headers) {
             String name = header.a;
