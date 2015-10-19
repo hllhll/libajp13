@@ -104,6 +104,12 @@ public abstract class AbstractAjpMessage implements AjpMessage
         bos.write(b ? 1 : 0);
     }
 
+    // I'm not really sure what that means, this is the output of other client (reverse proxy) reverse engineering
+    void writeEmptyValue()
+    {
+        bos.write(0xFF);
+        bos.write(0xFF);
+    }
     /*
      * @param s the string to write in the specific message
      * @param term whether or not append the null-byte terminator

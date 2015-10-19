@@ -96,7 +96,12 @@ public class ForwardRequestMessage
         this.remoteAddr = remoteAddr; //e.g. 127.0.0.1
         writeString(remoteAddr, true);
         this.remoteHost = remoteHost;
-        writeString(remoteHost, true); //e.g. localhost
+        // Altough writestring handles empty elements, I needed a different approach
+        if(remoteHost!=null) {
+            writeString(remoteHost, true); //e.g. localhost
+        }else{
+            writeEmptyValue();
+        }
         this.serverName = serverName;
         writeString(serverName, true);
         this.serverPort = serverPort;
@@ -149,7 +154,18 @@ public class ForwardRequestMessage
                 writeString(name, true);
             }
             //Send attribute value
-            writeString(value, true);
+
+            // Not all fields are text values
+            switch(name.toLowerCase())
+            {
+                case "ssl_key_size":
+                    writeInt(Integer.parseInt(value) );
+                    break;
+                default:
+                    writeString(value, true);
+                    break;
+            }
+
         }
 
         //End of the packet
