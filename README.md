@@ -84,7 +84,7 @@ attributes.add(Pair.make("custom_attribute","custom_value"));
 AjpMessage msg = new ForwardRequestMessage(5, "HTTP/1.0", "/api/", "127.0.0.1", "localhost", "127.0.0.1", 8009, true, headers, attributes);
 ``` 
 
-_Passing SSL configuration and client certificate
+_Passing SSL configuration and client certificate_
 ```java
 String cert= "-----BEGIN CERTIFICATE-----\n" +
      "BASE64TADATADATADATADATADATADATADATADATADATADATADATADATADATADATA\n" +
